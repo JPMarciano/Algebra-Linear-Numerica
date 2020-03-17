@@ -2,27 +2,29 @@
 //x: solução do sistema Ax=b (assumimos que tal solução existe).
 //C: Seja A=LU a decomposição LU de A.
 //Então C(i,j)=L(i,j) para i>j e C(i,j)=U(i,j) para j>=i.
-function[x, C]=Gaussian_Elimination_3(A, b)
+function[x, C, P]=Gaussian_Elimination_4_com_P(A, b)
     C=[A,b];
     [n]=size(C,1);
+    // a matriz de permutação começa como a matriz identidade e depois sofre as mesmas trocas de linhas que a matriz C
+    P = eye(n,n);
     for j=1:(n-1)
     //O pivô está na posição (j,j)
         for i=(j+1):n
         //O elemento C(i,j) é o elemento na posição (i,j) de L na decomposição LU de A
-            if(C(j,j)==0)
-                k=0;
-                m=0;
-                // caso o pivô seja zero, a linha j+m, que tem o maior pivô em módulo, vai trocar com a linha j
-                while(k<n-j+1)
-                    if(abs(C(j+k, j)) > abs(C(j+m, j)))
-                        m=k;
-                    end
-                    k = k+1;
+            k=0;
+            m=0;
+            while(k<n-j+1)
+                if(abs(C(j+k, j))>abs(C(j+m, j)))
+                    m=k;
                 end
-                aux = C(j,:);
-                C(j, :) = C(j+m, :);
-                C(j+m, :) = aux;
+                k = k+1;
             end
+            aux = C(j,:);
+            C(j, :) = C(j+m, :);
+            C(j+m, :) = aux;
+            aux = P(j, :);
+            P(j, :) = P(j+m, :);
+            P(j+m, :) = aux;
             
             C(i,j)=C(i,j)/C(j,j);
         //Linha i <-Linha i -C(i,j)*Linha j

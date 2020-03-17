@@ -10,9 +10,11 @@ function[x, C]=Gaussian_Elimination_2(A, b)
         for i=(j+1):n
         //O elemento C(i,j) é o elemento na posição (i,j) de L na decomposição LU de A
             k=0;
-            while(C(j+k, j+k)==0)
+            //Ao sair do while, o pivô C(j+k,j) é o primeiro não nulo a partir da linha j, onde k pode ser 0 no caso em que C(j,j) é não nulo
+            while(C(j+k, j)==0)
                 k = k+1;
             end
+            // troca linha j com a j+k
             aux = C(j,:);
             C(j, :) = C(j+k, :);
             C(j+k, :) = aux;
